@@ -6,11 +6,9 @@ body {
 }
 
 #logo {
-    width: 500px;
+    width: 450px;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 75px;
+    margin: 50px auto 25px;
 }
 
 * {
