@@ -15,12 +15,15 @@ public class Register {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String fullName;
+    private String name;
+    private String surname;
+    private String fatherName;
     private String phoneNumber;
     private String residentialPhone;
     private String birthday;
     private String address;
     private String actualAddress;
+    private String email;
     private String fin;
     private String serie;
     private String password;

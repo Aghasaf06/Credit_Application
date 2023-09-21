@@ -12,4 +12,14 @@ public class UserController {
     public String home() {
         return "home";
     }
+
+    @GetMapping(path = "/register")
+    public String register() {
+        return "register";
+    }
+
+    @GetMapping(path = "/login")
+    public String login() {
+        return "login";
+    }
 }

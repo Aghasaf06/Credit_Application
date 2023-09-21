@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>ATMOS Bank</title>
-        <link th:href="@{/css/navbar.css}" rel="stylesheet" />
+        <link th:href="@{/css/navbar.css}" rel="stylesheet"/>
         <style>
             .wrap {
                 height: 100%;
@@ -55,10 +55,14 @@
         <!------------------------------------------------Main----------------------------------------------------------------------------->
         <img id="logo" src="/images/AtmosBank.png" alt="Atmos Logo">
         <div class="wrap">
-            <button class="button">Qeydiyyat</button>
+            <form th:action="@{/user/register}" method="get">
+                <button class="button" type="submit">Qeydiyyat</button>
+            </form>
         </div>
         <div class="wrap">
-            <button class="button">Daxil ol</button>
-        </div>
+            <form th:action="@{/user/login}" method="get">
+                <button class="button" type="submit">Daxil ol</button>
+            </form>
+        </div>    
     </body>
 </html>
