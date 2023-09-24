@@ -1,0 +1,198 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.com">
+  <head>
+    <title>Loan Calculator</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style>
+        .bg-dark {
+            background-color: #38B6FF !important;
+        }
+
+        input.btn.btn-dark.btn-block {
+            background-color: #38B6FF !important;
+        }
+
+        .wrap {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
+            .button {
+                width: 140px;
+                height: 45px;
+                font-family: fantasy;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 2.5px;
+                font-weight: 500;
+                color: #000;
+                background-color: #fff;
+                border: none;
+                border-radius: 45px;
+                box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease 0s;
+                cursor: pointer;
+                outline: none;
+            }
+
+            .button:hover {
+                background-color: #38B6FF;
+                box-shadow: 0px 15px 20px #38B6FF;
+                color: #fff;
+                transform: translateY(-7px);
+                }
+    </style>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card card-body text-center mt-5">
+            <h1 class="heading display-5 pb-3">Kredit kalkulyatoru</h1>
+
+            <form id="loan-form" th:action="@{/user/saveCredit}" method="post">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">₼</span>
+                  <input type="number" class="form-control" id="amount" placeholder="Kredit məbləği" name="amount">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">%</span>
+                  <input type="number" class="form-control" id="interest" placeholder="Faiz" name="interest">
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" id="years" placeholder="Ödəniləcək müddət(il)" name="year">
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Hesabla" class="btn btn-dark btn-block">
+              </div>
+            </form>
+            
+            <div id="results" class="pt-4">
+              <h5>Nəticə</h5>
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">Aylıq ödəniş</span>
+                  <input type="number" class="form-control" id="monthly-payment" disabled name="monthly">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">Ümumi ödəniş</span>
+                  <input type="number" class="form-control" id="total-payment" disabled name="total">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">Ümumi faiz</span>
+                  <input type="number" class="form-control" id="total-interest" disabled name="commission">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="wrap">
+        <form th:action="@{/user/creditTable}" method="get">
+            <button class="button" type="submit">Kredit cədvəlinə bax</button>
+        </form>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+    <script>
+        // Listen for submit
+        document.getElementById('loan-form').addEventListener('submit', calculateResults);
+
+        // Calculate Results
+        function calculateResults(e){
+
+        // console.log("calculating");
+
+        // Declare UI Variables
+
+        const amount = document.getElementById('amount');
+        const interest = document.getElementById('interest');
+        const years = document.getElementById('years');
+        const monthlyPayment = document.getElementById('monthly-payment');
+        const totalPayment = document.getElementById('total-payment');
+        const totalInterest = document.getElementById('total-interest');
+
+        // Turn amount into decimal and store it into variable
+        const principal = parseFloat(amount.value);
+        const calculatedInterest = parseFloat(interest.value) /100 / 12;
+        const calculatedPayment =  parseFloat(years.value) * 12;
+
+        // Compute monthly payments
+        const x = Math.pow(1 + calculatedInterest, calculatedPayment);
+        const monthly = (principal * x * calculatedInterest)/(x-1);
+
+
+        // Check if value is finite
+
+        if(isFinite(monthly)){
+            monthlyPayment.value = monthly.toFixed(2);
+            totalPayment.value = (monthly * calculatedPayment).toFixed(2);
+            totalInterest.value = ((monthly * calculatedPayment) - principal).toFixed(2);
+
+        } else{
+            showError("Please check your numbers")
+        }
+
+        e.preventDefault();
+        }
+
+        // Function to show error
+        function showError(error){
+            // create div
+            const errorDiv = document.createElement('div');
+
+            // Get card and heading in order to add new div to DOM. Parent element
+            const card = document.querySelector('.card');
+            const heading = document.querySelector('.heading');
+
+
+            // Give div a class name
+            errorDiv.className = 'alert alert-danger';
+
+            // Create text and append div
+            errorDiv.appendChild(document.createTextNode(error));
+
+            // Insert error above heading. Insert above will take in the parent element which is the card in this case and for the parameters
+            // It will take in the element you want to put in and the element you want to put it before, in this case errorDiv and the heading
+
+            card.insertBefore(errorDiv, heading);
+
+            // Clear error after 3 seconds
+
+            setTimeout(clearError, 3000);
+
+        }
+
+
+        // Create clear error
+        function clearError(){
+            document.querySelector('.alert').remove();
+        }
+    </script>
+  </body>
+</html>

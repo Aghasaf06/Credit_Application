@@ -1,6 +1,8 @@
 package buta.creditapplication.Controller;
 
+import buta.creditapplication.Entity.Credit;
 import buta.creditapplication.Entity.User;
+import buta.creditapplication.Service.CreditService;
 import buta.creditapplication.Service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
     private final UserService userService;
+    private final CreditService creditService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CreditService creditService) {
         this.userService = userService;
+        this.creditService = creditService;
     }
 
     String fin;
@@ -35,7 +39,7 @@ public class UserController {
 
     @PostMapping(path = "/saveUser")
     public String saveUser(@ModelAttribute User user) {
-        user.setPassword("12345");
+        user.setPassword("06102002");
         userService.saveUser(user);
         return "submit";
     }
@@ -70,5 +74,24 @@ public class UserController {
             userService.changePassword(fin, password);
             return "login";
         }
+    }
+
+    @GetMapping(path = "/calculator")
+    public String calculator() {
+        return "calculator";
+    }
+
+    Credit credit;
+
+    @PostMapping(path = "/saveCredit")
+    public void saveCredit(@ModelAttribute Credit credit) {
+        creditService.saveCredit(credit);
+        this.credit = credit;
+    }
+
+    @GetMapping(path = "/creditTable")
+    public ModelAndView creditTable(Credit credit) {
+        credit = this.credit;
+        return new ModelAndView("creditTable", "credit", credit);
     }
 }
