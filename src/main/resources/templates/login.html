@@ -12,20 +12,20 @@
     <div class="container">
         <div class="wrapper">
           <div class="title"><span>Daxil olun</span></div>
-            <form action="#">
+            <form th:action="@{/user/loginMyAccount}" method="post">
                 <div class="row">
                 <i class="fas fa-user"></i>
-                <input type="text" placeholder="Fin" required>
+                <input type="text" placeholder="Fin" required="" name="fin">
                 </div>
                 <div class="row">
                 <i class="fas fa-lock"></i>
-                <input type="password" placeholder="Şifrə" required>
+                <input type="text" placeholder="Şifrə" required="" name="password">
                 </div>
                 <div class="pass"><a href="#">Şifrəni unutmusunuz?</a></div>
                 <div class="row button">
                 <input type="submit" value="Daxil ol">
                 </div>
-                <div class="signup-link">Hesabınız yoxdur? <a href="#">Qeydiyyatdan keçin</a></div>
+                <div class="signup-link">Hesabınız yoxdur? <a th:href="@{/user/register}">Qeydiyyatdan keçin</a></div>
             </form>
         </div>
     </div>
