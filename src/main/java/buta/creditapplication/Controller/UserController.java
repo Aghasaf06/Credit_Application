@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
-
 @Controller
 @RequestMapping(path = "/user")
 public class UserController {
@@ -54,7 +52,23 @@ public class UserController {
             this.fin = fin;
             return "redirect:/user/myAccount";
         } else {
-            return "redirect:/user/login";
+            return "incorrect";
+        }
+    }
+
+    @GetMapping(path = "/changePassword")
+    public String changePassword() {
+        return "changePassword";
+    }
+
+    @PostMapping(path = "/newPassword")
+    public String newPassword(@RequestParam(name = "fin") String fin, @RequestParam(name = "password") String password) {
+        User user = userService.getByFin(fin);
+        if (user == null) {
+            return "incorrectFin";
+        } else {
+            userService.changePassword(fin, password);
+            return "login";
         }
     }
 }

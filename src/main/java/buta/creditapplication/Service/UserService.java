@@ -1,29 +1,33 @@
 package buta.creditapplication.Service;
 
 import buta.creditapplication.Entity.User;
-import buta.creditapplication.Repository.UserRepository;
+import buta.creditapplication.Repository.IUserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final IUserRepository iUserRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(IUserRepository userRepository) {
+        this.iUserRepository = userRepository;
     }
 
     public void saveUser(User user) {
-        userRepository.save(user);
+        iUserRepository.save(user);
     }
 
     public User getByFin(String fin) {
-        return userRepository.getUserByFin(fin);
+        return iUserRepository.getUserByFin(fin);
     }
 
     public Boolean loginMyAccount(String fin, String password) {
-        return userRepository.getUserByFin(fin).getId().equals(userRepository.getUserByPassword(password).getId());
+        if (iUserRepository.getUserByFin(fin) == null || iUserRepository.getUserByPassword(password) == null) {
+            return false;
+        } else return iUserRepository.getUserByFin(fin).getId().equals(iUserRepository.getUserByPassword(password).getId());
+    }
+
+    public void changePassword(String fin, String password) {
+        iUserRepository.updatePassword(fin, password);
     }
 }
